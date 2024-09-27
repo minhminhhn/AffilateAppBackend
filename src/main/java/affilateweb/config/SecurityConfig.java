@@ -48,7 +48,9 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**")
+                                "/v3/api-docs/**",
+                                "/api/coupons/get_valid",
+                                "/api/products")
                         .permitAll()
                         .requestMatchers("/api/account/create_account")
                         .hasAuthority("ADMIN")

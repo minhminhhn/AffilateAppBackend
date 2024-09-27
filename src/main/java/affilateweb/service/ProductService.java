@@ -31,4 +31,8 @@ public class ProductService {
         return productRepo.findById(id).orElse(null);
     }
 
+    public List<Product> searchProducts(String input) {
+        return productRepo.searchProducts(input);
+    }
+
 }

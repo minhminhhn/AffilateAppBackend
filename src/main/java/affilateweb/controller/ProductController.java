@@ -28,4 +28,16 @@ public class ProductController {
             return ResponseEntity.ok(products);
         }
     }
+
+    @GetMapping("/api/products/{id}")
+    public ResponseEntity<?> getProductById(@RequestParam int id) {
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/api/products/search_name")
+    public ResponseEntity<?> searchProducts(@RequestParam String input) {
+        List<Product> products = productService.searchProducts(input);
+        return ResponseEntity.ok(products);
+    }
 }

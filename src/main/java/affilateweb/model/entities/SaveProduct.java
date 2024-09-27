@@ -3,6 +3,7 @@ package affilateweb.model.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -12,6 +13,8 @@ public class SaveProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "price")
+    private BigDecimal price;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Account user;
