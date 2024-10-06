@@ -23,6 +23,7 @@ public class AccountService implements UserDetailsService {
     private AccountRepo accountRepository;
     @Autowired
     private RoleRepo roleRepository;
+    @Autowired
     private  PasswordEncoder passwordEncoder;
 
     public void register(RegisterRequest registerRequest) {

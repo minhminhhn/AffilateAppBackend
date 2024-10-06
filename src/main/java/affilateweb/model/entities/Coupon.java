@@ -2,6 +2,7 @@ package affilateweb.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
