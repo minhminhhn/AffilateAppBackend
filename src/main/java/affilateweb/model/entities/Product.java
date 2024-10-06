@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @Data
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "shop_id")
@@ -35,17 +34,4 @@ public class Product {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public Product(Integer id, Shop shop, String name, String image, String affLink, BigDecimal currentPrice, ProductType productType, Boolean isOfficialShop, BigDecimal ratingAvg, Integer sold, Integer ratingCount) {
-        this.id = id;
-        this.shop = shop;
-        this.name = name;
-        this.image = image;
-        this.affLink = affLink;
-        this.currentPrice = currentPrice;
-        this.productType = productType;
-        this.isOfficialShop = isOfficialShop;
-        this.ratingAvg = ratingAvg;
-        this.sold = sold;
-        this.ratingCount = ratingCount;
-    }
 }
