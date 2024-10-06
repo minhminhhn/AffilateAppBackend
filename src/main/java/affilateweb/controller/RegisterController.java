@@ -8,7 +8,7 @@ import affilateweb.model.requestobject.RegisterRequest;
 import affilateweb.service.AccountService;
 
 @RestController
-@RequestMapping("/api/register")
+@RequestMapping("/api/auth/register")
 @RequiredArgsConstructor
 public class RegisterController {
 
