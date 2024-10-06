@@ -17,5 +17,4 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
             "ORDER BY relevance_score DESC", nativeQuery = true)
     List<Product> searchProducts(String input);
 
-
 }

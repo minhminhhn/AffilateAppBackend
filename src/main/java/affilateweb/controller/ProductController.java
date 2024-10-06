@@ -1,5 +1,6 @@
 package affilateweb.controller;
 
+import affilateweb.dto.ProductDTO;
 import affilateweb.model.entities.Product;
 import affilateweb.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,13 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/api/products/{id}")
+    @GetMapping("/api/product/detail")
     public ResponseEntity<?> getProductById(@RequestParam int id) {
-        Product product = productService.getProductById(id);
+        ProductDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/api/products/search_name")
+    @GetMapping("/api/product/search_name")
     public ResponseEntity<?> searchProducts(@RequestParam String input) {
         List<Product> products = productService.searchProducts(input);
         return ResponseEntity.ok(products);

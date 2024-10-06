@@ -34,4 +34,18 @@ public class Product {
     private Integer ratingCount;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    public Product(Integer id, Shop shop, String name, String image, String affLink, BigDecimal currentPrice, ProductType productType, Boolean isOfficialShop, BigDecimal ratingAvg, Integer sold, Integer ratingCount) {
+        this.id = id;
+        this.shop = shop;
+        this.name = name;
+        this.image = image;
+        this.affLink = affLink;
+        this.currentPrice = currentPrice;
+        this.productType = productType;
+        this.isOfficialShop = isOfficialShop;
+        this.ratingAvg = ratingAvg;
+        this.sold = sold;
+        this.ratingCount = ratingCount;
+    }
 }

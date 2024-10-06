@@ -20,8 +20,6 @@ public class SaveProductService {
     @Autowired
     private SaveProductRepo saveProductRepo;
     @Autowired
-    private ProductService productService;
-    @Autowired
     private ProductRepo productRepo;
     @Autowired
     private AccountService accountService;
