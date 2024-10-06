@@ -23,20 +23,20 @@ public class AccountController {
     AccountRepo accountRepo;
 
 
-    @GetMapping("/info")
-    public ResponseEntity<?> getAccountInfo() {
-
-        Account account = accountService.getAccount();
-
-        AccountDTO accountInfo = new AccountDTO();
-
-        accountInfo.setUsername(account.getUsername());
-        accountInfo.setRole(account.getRole().getRoleName());
-        accountInfo.setEmail(account.getEmail());
-        accountInfo.setName(account.getName());
-
-        return ResponseEntity.ok(accountInfo);
-    }
+//    @GetMapping("/info")
+//    public ResponseEntity<?> getAccountInfo() {
+//
+//        Account account = accountService.getAccount();
+//
+//        AccountDTO accountInfo = new AccountDTO();
+//
+//        accountInfo.setUsername(account.getUsername());
+//        accountInfo.setRole(account.getRole().getRoleName());
+//        accountInfo.setEmail(account.getEmail());
+//        accountInfo.setName(account.getName());
+//
+//        return ResponseEntity.ok(accountInfo);
+//    }
 
     @GetMapping("/list_account")
     public ResponseEntity<?> getListAccount(HttpServletRequest request) {

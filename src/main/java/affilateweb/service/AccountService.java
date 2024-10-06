@@ -41,6 +41,21 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
     }
 
+    public Account getAccount(Authentication authentication) {
+        // Lấy đối tượng principal từ authentication
+        Object principal = authentication.getPrincipal();
+
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername(); // Lấy username từ UserDetails
+        } else {
+            username = principal.toString(); // Trong trường hợp khác, có thể là chuỗi
+        }
+
+        // Sử dụng username để lấy Account
+        return (Account) loadUserByUsername(username);
+    }
+
     public Account getAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username =  (String) authentication.getPrincipal();
