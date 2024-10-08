@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/register",
+                        .requestMatchers("/api/auth/register",
                                 "/api/auth/login",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
