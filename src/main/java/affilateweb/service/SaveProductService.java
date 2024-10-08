@@ -51,6 +51,9 @@ public class SaveProductService {
     //get lits product by user id
     public List<Product> getSaveProductByUserId() {
         Account account = accountService.getAccount();
+        if (account == null) {
+            return new ArrayList<>();
+        }
         List<Product> listProduct = new ArrayList<>();
         List<SaveProduct> listSaveProduct = saveProductRepo.findByUser_Id(account.getId());
         for (SaveProduct saveProduct : listSaveProduct) {

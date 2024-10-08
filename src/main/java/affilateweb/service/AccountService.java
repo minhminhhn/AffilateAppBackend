@@ -15,6 +15,7 @@ import affilateweb.repository.AccountRepo;
 import affilateweb.repository.RoleRepo;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -59,10 +60,15 @@ public class AccountService implements UserDetailsService {
 
     public Account getAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username =  (String) authentication.getPrincipal();
 
+        if (authentication == null || authentication.getPrincipal().equals("anonymousUser")) {
+            return null;
+        }
+
+        String username =  (String) authentication.getPrincipal();
         return (Account) loadUserByUsername(username);
     }
+
 
     public List<Account> getListAccount() {
         return accountRepository.findAll();
@@ -78,7 +84,6 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("Role not found")));
         accountRepository.save(account);
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -21,6 +21,7 @@ public class Account implements UserDetails {
     private String password;
     private String name;
     private String email;
+    private String avatar;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

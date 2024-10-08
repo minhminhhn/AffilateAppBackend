@@ -43,7 +43,7 @@ public class ProductService {
             return null;
         }
         ProductDTO productDTO = new ProductDTO();
-        productDTO.setProductInformation(product);
+        productDTO.setProduct(product);
         List<Product> saveProduct = saveProductService.getSaveProductByUserId();
         productDTO.setSaved(saveProduct.contains(product));
         List<HistoryPrice> historyPrice = historyPriceRepo.findByProductId(id);

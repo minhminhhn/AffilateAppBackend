@@ -33,6 +33,9 @@ public class ProductController {
     @GetMapping("/api/product/detail")
     public ResponseEntity<?> getProductById(@RequestParam int id) {
         ProductDTO product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.badRequest().body("Product not found");
+        }
         return ResponseEntity.ok(product);
     }
 
