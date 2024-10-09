@@ -2,10 +2,13 @@ package affilateweb.service;
 
 import affilateweb.dto.HistoryPriceDTO;
 import affilateweb.dto.ProductDTO;
+import affilateweb.model.entities.Coupon;
 import affilateweb.model.entities.HistoryPrice;
 import affilateweb.model.entities.Product;
+import affilateweb.model.entities.ProductTypeCouponCategory;
 import affilateweb.repository.HistoryPriceRepo;
 import affilateweb.repository.ProductRepo;
+import affilateweb.repository.ProductTypeCouponCategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,10 @@ public class ProductService {
     @Autowired
     private HistoryPriceRepo historyPriceRepo;
 
+    @Autowired
+    private CouponService couponService;
+    @Autowired
+    private ProductTypeCouponCategoryRepo productTypeCouponCategoryRepo;
 
 
     public List<Product> getAllProducts() {
@@ -55,11 +62,23 @@ public class ProductService {
             historyPriceDTO.add(historyPriceDTO1);
         }
         productDTO.setHistoryPrice(historyPriceDTO);
+
+        //get list ProductTypeCouponCategory found for product type
+        List<ProductTypeCouponCategory> productTypeCouponCategories = productTypeCouponCategoryRepo.findAllByProductTypeId(product.getProductType().getId());
+
+        List<Coupon> vouchersFound = new ArrayList<>();
+        //for each list ProductTypeCouponCategory found, get list voucher found for category
+        for (ProductTypeCouponCategory productTypeCouponCategory : productTypeCouponCategories) {
+            List<Coupon> vouchersFoundByCatrgory = couponService.getAllValidCouponsByCategoryId(productTypeCouponCategory.getCouponCategory().getId());
+            //save list to vouchersFound
+            vouchersFound.addAll(vouchersFoundByCatrgory);
+        }
+        productDTO.setVouchersFound(vouchersFound);
+
         return productDTO;
     }
 
     public List<Product> searchProducts(String input) {
         return productRepo.searchProducts(input);
     }
-
 }

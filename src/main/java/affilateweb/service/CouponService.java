@@ -21,10 +21,21 @@ public class CouponService {
         return couponRepo.findAllValidCoupons(currentDateTime);
     }
 
+    //get Coupon valid by category id
+    public List<Coupon> getAllValidCouponsByCategoryId(int categoryId) {
+        String currentDateTime = Instant.now().toString();
+        return couponRepo.findAllValidCouponsByCategoryId(currentDateTime, categoryId);
+    }
+
     //Create a new coupon with all information
     public void createCoupon(Coupon coupon) {
         couponRepo.save(coupon);
     }
+
+    public List<Coupon> getAllCoupons() {
+        return couponRepo.findAll();
+    }
+
 
 
 }

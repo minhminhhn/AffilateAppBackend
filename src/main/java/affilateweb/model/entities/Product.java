@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Data
 public class Product {
     @Id
-    private Integer id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
