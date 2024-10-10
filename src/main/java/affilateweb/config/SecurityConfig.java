@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/api/coupons/get_valid",
                                 "/api/products",
-                                "/api/product/**")
+                                "/api/product/**",
+                                "/api/coupon/get_valid")
                         .permitAll()
                         .requestMatchers("/api/account/create_account")
                         .hasAuthority("ADMIN")
