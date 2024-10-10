@@ -1,6 +1,7 @@
 package affilateweb.service;
 
 import affilateweb.model.entities.PasswordResetToken;
+import affilateweb.model.requestobject.UpdateInfoAccount;
 import affilateweb.repository.PasswordResetTokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,7 +17,9 @@ import affilateweb.model.entities.Role;
 import affilateweb.repository.AccountRepo;
 import affilateweb.repository.RoleRepo;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -81,6 +84,20 @@ public class AccountService implements UserDetailsService {
         return (Account) loadUserByUsername(username);
     }
 
+    public void updateInfoAccount(UpdateInfoAccount updateInfoAccount) {
+        Account account = getAccount();
+        if (!Objects.equals(account.getEmail(), updateInfoAccount.getEmail())) {
+            //check if email already exists
+            if (accountRepository.findByEmail(updateInfoAccount.getEmail()) != null) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+        }
+        account.setName(updateInfoAccount.getName());
+        account.setEmail(updateInfoAccount.getEmail());
+        account.setAvatar(updateInfoAccount.getAvatar());
+        account.setUpdatedAt(LocalDateTime.now());
+        accountRepository.save(account);
+    }
 
     public List<Account> getListAccount() {
         return accountRepository.findAll();
@@ -88,6 +105,12 @@ public class AccountService implements UserDetailsService {
 
     public void createAccount(RegisterRequest registerRequest) {
         Account account = new Account();
+        if (accountRepository.findByUsername(registerRequest.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        if (accountRepository.findByEmail(registerRequest.getEmail()) != null) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         account.setUsername(registerRequest.getUsername());
         account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         account.setName(registerRequest.getName());
