@@ -1,8 +1,12 @@
 package affilateweb.controller;
 
 import affilateweb.dto.AccountDTO;
+import affilateweb.dto.AuthenticationResponse;
 import affilateweb.model.entities.Account;
+import affilateweb.model.requestobject.AuthenticationRequest;
+import affilateweb.model.requestobject.RegisterRequest;
 import affilateweb.service.AccountService;
+import affilateweb.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,15 +15,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import affilateweb.dto.AuthenticationResponse;
-import affilateweb.model.requestobject.AuthenticationRequest;
-import affilateweb.util.JwtUtil;
 
 @RestController
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class LoginController {
-
+public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -27,7 +29,7 @@ public class LoginController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping(value = "/api/auth/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -49,4 +51,27 @@ public class LoginController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
+        try {
+            accountService.register(registerRequest);
+            return ResponseEntity.ok("Account created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        accountService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok("Reset password email sent.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        accountService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password has been reset.");
+    }
+
 }

@@ -1,5 +1,7 @@
 package affilateweb.service;
 
+import affilateweb.model.entities.PasswordResetToken;
+import affilateweb.repository.PasswordResetTokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +17,7 @@ import affilateweb.repository.AccountRepo;
 import affilateweb.repository.RoleRepo;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -26,9 +28,19 @@ public class AccountService implements UserDetailsService {
     private RoleRepo roleRepository;
     @Autowired
     private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private PasswordResetTokenRepo tokenRepo;
 
     public void register(RegisterRequest registerRequest) {
         Account account = new Account();
+        if (accountRepository.findByUsername(registerRequest.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        if (accountRepository.findByEmail(registerRequest.getEmail()) != null) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         account.setUsername(registerRequest.getUsername());
         account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         account.setName(registerRequest.getName());
@@ -92,5 +104,31 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         return account;
+    }
+
+
+    public void sendResetPasswordEmail(String email) {
+        Account user = accountRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken resetToken = new PasswordResetToken(token, user);
+        tokenRepo.save(resetToken);
+
+        String resetUrl = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        emailService.sendEmail(email, "Reset Password", "Click the link to reset your password: " + resetUrl);
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = tokenRepo.findByToken(token);
+        if (resetToken == null || resetToken.isExpired()) {
+            throw new IllegalArgumentException("Invalid or expired token");
+        }
+
+        Account user = resetToken.getAccount();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(user);
     }
 }
