@@ -50,9 +50,23 @@ public class ProductService {
             return null;
         }
         ProductDTO productDTO = new ProductDTO();
-        productDTO.setProduct(product);
+        productDTO.setId(product.getId());
+        productDTO.setShop(product.getShop());
+        productDTO.setName(product.getName());
+        productDTO.setImage(product.getImage());
+        productDTO.setAffLink(product.getAffLink());
+        productDTO.setCurrentPrice(product.getCurrentPrice());
+        productDTO.setProductType(product.getProductType());
+        productDTO.setIsOfficialShop(product.getIsOfficialShop());
+        productDTO.setRatingAvg(product.getRatingAvg());
+        productDTO.setSold(product.getSold());
+        productDTO.setRatingCount(product.getRatingCount());
+        productDTO.setCreatedAt(product.getCreatedAt());
+        productDTO.setUpdatedAt(product.getUpdatedAt());
+
         List<Product> saveProduct = saveProductService.getSaveProductByUserId();
         productDTO.setSaved(saveProduct.contains(product));
+
         List<HistoryPrice> historyPrice = historyPriceRepo.findByProductId(id);
         List<HistoryPriceDTO> historyPriceDTO = new ArrayList<>();
         for (HistoryPrice historyPrice1 : historyPrice) {
@@ -63,15 +77,11 @@ public class ProductService {
         }
         productDTO.setHistoryPrice(historyPriceDTO);
 
-        //get list ProductTypeCouponCategory found for product type
         List<ProductTypeCouponCategory> productTypeCouponCategories = productTypeCouponCategoryRepo.findAllByProductTypeId(product.getProductType().getId());
-
         List<Coupon> vouchersFound = new ArrayList<>();
-        //for each list ProductTypeCouponCategory found, get list voucher found for category
         for (ProductTypeCouponCategory productTypeCouponCategory : productTypeCouponCategories) {
-            List<Coupon> vouchersFoundByCatrgory = couponService.getAllValidCouponsByCategoryId(productTypeCouponCategory.getCouponCategory().getId());
-            //save list to vouchersFound
-            vouchersFound.addAll(vouchersFoundByCatrgory);
+            List<Coupon> vouchersFoundByCategory = couponService.getAllValidCouponsByCategoryId(productTypeCouponCategory.getCouponCategory().getId());
+            vouchersFound.addAll(vouchersFoundByCategory);
         }
         productDTO.setVouchersFound(vouchersFound);
 

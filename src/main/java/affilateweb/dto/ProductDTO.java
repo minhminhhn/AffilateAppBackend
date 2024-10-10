@@ -7,8 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProductDTO{
-    private Product product;
+public class ProductDTO extends Product {
     private boolean isSaved;
     private List<HistoryPriceDTO> historyPrice;
     private List<Coupon> vouchersFound;
