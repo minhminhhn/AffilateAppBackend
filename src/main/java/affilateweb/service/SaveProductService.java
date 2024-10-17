@@ -30,6 +30,13 @@ public class SaveProductService {
             throw new RuntimeException("Product not found");
         }
 
+        //if product is already saved, retur error
+        Optional<SaveProduct> saveProductOptional = Optional.ofNullable(
+                saveProductRepo.findByUser_IdAndProduct_Id(accountService.getAccount().getId(), productId));
+        if (saveProductOptional.isPresent()) {
+            throw new RuntimeException("Product is already saved");
+        }
+
         Product product = productOptional.get();
         SaveProduct saveProduct = new SaveProduct();
         saveProduct.setProduct(product);

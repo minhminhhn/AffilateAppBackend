@@ -12,4 +12,6 @@ public interface SaveProductRepo extends JpaRepository<SaveProduct, Integer> {
     void deleteByUser_IdAndProduct_Id(Integer userId, Integer productId);
 
     List<SaveProduct> findByUser_Id(Integer userId);
+
+    SaveProduct findByUser_IdAndProduct_Id(Integer userId, Integer productId);
 }
