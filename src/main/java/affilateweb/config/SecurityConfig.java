@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/api/coupon/get_valid")
                         .permitAll()
                         .requestMatchers("/api/account/create_account",
-                                "/api/account/list_account"
+                                "/api/account/list_account",
+                                "/api/role/list_role"
                                 )
                         .hasAuthority("ADMIN")
                         .anyRequest().authenticated()
