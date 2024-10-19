@@ -1,6 +1,7 @@
 package affilateweb.controller;
 
 import affilateweb.dto.ProductDTO;
+import affilateweb.dto.ProductDetailDTO;
 import affilateweb.model.entities.Product;
 import affilateweb.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,17 @@ public class ProductController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null) {
-            List<Product> products = productService.getAllProducts();
+            List<ProductDTO> products = productService.getAllProducts();
             return ResponseEntity.ok(products);
         } else {
-            Page<Product> products = productService.getAllProducts(page, size);
+            Page<ProductDTO> products = productService.getAllProducts(page, size);
             return ResponseEntity.ok(products);
         }
     }
 
     @GetMapping("/api/product/detail")
     public ResponseEntity<?> getProductById(@RequestParam int id) {
-        ProductDTO product = productService.getProductById(id);
+        ProductDetailDTO product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.badRequest().body("Product not found");
         }

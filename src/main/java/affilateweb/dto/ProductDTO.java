@@ -1,14 +1,19 @@
 package affilateweb.dto;
 
-import affilateweb.model.entities.Coupon;
-import affilateweb.model.entities.Product;
+import affilateweb.model.entities.ProductType;
 import lombok.Data;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
-public class ProductDTO extends Product {
-    private boolean isSaved;
-    private List<HistoryPriceDTO> historyPrice;
-    private List<Coupon> vouchersFound;
+public class ProductDTO {
+    //toi can id, name, image, currentPrice, ratingAvg, productType, affLink in product
+    private Long id;
+    private String name;
+    private String image;
+    private BigDecimal currentPrice;
+    private BigDecimal ratingAvg;
+    private ProductType productType;
+    private String affLink;
+    private Boolean saved;
 }

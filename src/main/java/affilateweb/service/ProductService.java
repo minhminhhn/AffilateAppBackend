@@ -2,6 +2,7 @@ package affilateweb.service;
 
 import affilateweb.dto.HistoryPriceDTO;
 import affilateweb.dto.ProductDTO;
+import affilateweb.dto.ProductDetailDTO;
 import affilateweb.model.entities.Coupon;
 import affilateweb.model.entities.HistoryPrice;
 import affilateweb.model.entities.Product;
@@ -35,37 +36,63 @@ public class ProductService {
     private ProductTypeCouponCategoryRepo productTypeCouponCategoryRepo;
 
 
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
+public List<ProductDTO> getAllProducts() {
+    List<Product> products = productRepo.findAll();
+    List<ProductDTO> productDTOs = new ArrayList<>();
+    for (Product product : products) {
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        productDTO.setImage(product.getImage());
+        productDTO.setCurrentPrice(product.getCurrentPrice());
+        productDTO.setRatingAvg(product.getRatingAvg());
+        productDTO.setProductType(product.getProductType());
+        productDTO.setAffLink(product.getAffLink());
+        productDTO.setSaved(saveProductService.getSaveProductByUserId().contains(product));
+        productDTOs.add(productDTO);
     }
+    return productDTOs;
+}
 
-    public Page<Product> getAllProducts(int page, int size) {
+    public Page<ProductDTO> getAllProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return productRepo.findAll(pageable);
+        Page<Product> products = productRepo.findAll(pageable);
+        return products.map(product -> {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setId(product.getId());
+            productDTO.setName(product.getName());
+            productDTO.setImage(product.getImage());
+            productDTO.setCurrentPrice(product.getCurrentPrice());
+            productDTO.setRatingAvg(product.getRatingAvg());
+            productDTO.setProductType(product.getProductType());
+            productDTO.setAffLink(product.getAffLink());
+            productDTO.setSaved(saveProductService.getSaveProductByUserId().contains(product));
+            return productDTO;
+        });
     }
 
-    public ProductDTO getProductById(int id) {
+    public ProductDetailDTO getProductById(int id) {
         Product product = productRepo.findById(id).orElse(null);
         if (product == null) {
             return null;
         }
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId());
-        productDTO.setShop(product.getShop());
-        productDTO.setName(product.getName());
-        productDTO.setImage(product.getImage());
-        productDTO.setAffLink(product.getAffLink());
-        productDTO.setCurrentPrice(product.getCurrentPrice());
-        productDTO.setProductType(product.getProductType());
-        productDTO.setIsOfficialShop(product.getIsOfficialShop());
-        productDTO.setRatingAvg(product.getRatingAvg());
-        productDTO.setSold(product.getSold());
-        productDTO.setRatingCount(product.getRatingCount());
-        productDTO.setCreatedAt(product.getCreatedAt());
-        productDTO.setUpdatedAt(product.getUpdatedAt());
+        ProductDetailDTO productDetailDTO = new ProductDetailDTO();
+        productDetailDTO.setId(product.getId());
+        productDetailDTO.setShop(product.getShop());
+        productDetailDTO.setName(product.getName());
+        productDetailDTO.setImage(product.getImage());
+        productDetailDTO.setAffLink(product.getAffLink());
+        productDetailDTO.setCurrentPrice(product.getCurrentPrice());
+        productDetailDTO.setProductType(product.getProductType());
+        productDetailDTO.setIsOfficialShop(product.getIsOfficialShop());
+        productDetailDTO.setRatingAvg(product.getRatingAvg());
+        productDetailDTO.setSold(product.getSold());
+        productDetailDTO.setRatingCount(product.getRatingCount());
+        productDetailDTO.setCreatedAt(product.getCreatedAt());
+        productDetailDTO.setUpdatedAt(product.getUpdatedAt());
 
         List<Product> saveProduct = saveProductService.getSaveProductByUserId();
-        productDTO.setSaved(saveProduct.contains(product));
+        productDetailDTO.setSaved(saveProduct.contains(product));
 
         List<HistoryPrice> historyPrice = historyPriceRepo.findByProductId(id);
         List<HistoryPriceDTO> historyPriceDTO = new ArrayList<>();
@@ -75,7 +102,7 @@ public class ProductService {
             historyPriceDTO1.setDate(String.valueOf(historyPrice1.getDateUpdate()).substring(0, 10));
             historyPriceDTO.add(historyPriceDTO1);
         }
-        productDTO.setHistoryPrice(historyPriceDTO);
+        productDetailDTO.setHistoryPrice(historyPriceDTO);
 
         List<ProductTypeCouponCategory> productTypeCouponCategories = productTypeCouponCategoryRepo.findAllByProductTypeId(product.getProductType().getId());
         List<Coupon> vouchersFound = new ArrayList<>();
@@ -83,9 +110,9 @@ public class ProductService {
             List<Coupon> vouchersFoundByCategory = couponService.getAllValidCouponsByCategoryId(productTypeCouponCategory.getCouponCategory().getId());
             vouchersFound.addAll(vouchersFoundByCategory);
         }
-        productDTO.setVouchersFound(vouchersFound);
+        productDetailDTO.setVouchersFound(vouchersFound);
 
-        return productDTO;
+        return productDetailDTO;
     }
 
     public List<Product> searchProducts(String input) {
