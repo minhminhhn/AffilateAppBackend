@@ -22,7 +22,6 @@ public class AccountController {
     private final JwtUtil jwtUtil;
     @Autowired
     AccountService accountService;
-    AccountRepo accountRepo;
 
 
 //    @GetMapping("/info")
@@ -53,7 +52,7 @@ public class AccountController {
     @GetMapping("/list_account")
     public ResponseEntity<?> getListAccount(HttpServletRequest request) {
 
-        return ResponseEntity.ok(accountRepo.findAll());
+        return ResponseEntity.ok(accountService.getListAccount());
     }
 
     @PostMapping(value = "/create_account", produces = MediaType.APPLICATION_JSON_VALUE)
